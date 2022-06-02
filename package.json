@@ -1,0 +1,29 @@
+{
+  "name": "js-code-pattern-discovery",
+  "version": "1.0.0",
+  "description": "Gathers Information on the code patterns in given JavaScript code.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/louis-gabel/js-code-pattern-discovery.git"
+  },
+  "keywords": [
+    "js",
+    "code",
+    "pattern",
+    "discovery"
+  ],
+  "author": "Louis van der Gabel",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/louis-gabel/js-code-pattern-discovery/issues"
+  },
+  "homepage": "https://github.com/louis-gabel/js-code-pattern-discovery#readme",
+  "dependencies": {
+    "acorn": "^8.7.1",
+    "acorn-walk": "^8.2.0"
+  }
+}
