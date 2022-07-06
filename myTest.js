@@ -5,11 +5,7 @@ const walk = require("acorn-walk")
 let outString = "A";
 let letterCount = 66;
 
-try{
-    var data = fs.readFileSync('myTestFile.js', 'utf8');
-} catch (err) {
-    console.error(err);
-};
+const data = fs.readFileSync('myTestFile.ts', 'utf8');
 
 
 const BinaryHandler = (node) => {
@@ -33,6 +29,7 @@ funcs.BinaryExpression = (node, st, c) => {
   c(node.left, updatedState, "Expression")
   c(node.right, updatedState, "Expression")
 };
+
 
 walk.recursive(acorn.parse(data, {ecmaVersion: 2020}), JSON.stringify({depth: 0}), walk.make(funcs))
 

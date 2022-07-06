@@ -2,26 +2,44 @@ import * as acorn from "acorn"
 import fs from "fs"
 import * as walk from "acorn-walk"
 
-let outString = "A";
-let letterCount = 66;
-const recursionDepth = 4;
+let outString = "";
+let letterCount = 65;
+const maxDepth = 3;
+const maxRecursionDepth = 3;
 
 const data = fs.readFileSync('myTestFile.ts', 'utf8');
 
 
-// walk.ancestor(acorn.parse(data, {ecmaVersion: 2020}), {
-//   BinaryExpression(node, ancestors) {
-//     console.log(node.operator, ancestors.map(n => n.type))
-//   }
-// })
+const BinaryHandler = (node: any, recursionDepth: number): string => {
+  if ((recursionDepth > maxRecursionDepth) || ((node.left.type != "BinaryExpression") && node.right.type != "BinaryExpression") ) {
+    letterCount += 2;
+    return "(" + String.fromCharCode(letterCount-2) + node.operator + String.fromCharCode(letterCount-1) + ")";
 
-const BinaryHandler = (node: any) => {
-  if ((node.left.type == "BinaryExpression") || (node.right.type == "BinaryExpression")) {
-    outString = outString + node.operator + "(";
   } else {
-    outString = outString + node.operator;
+    if ((node.left.type == "BinaryExpression") && (node.right.type != "BinaryExpression")) {
+      letterCount += 1;
+      return "(" + String.fromCharCode(letterCount - 1) + node.operator + BinaryHandler(node.left, recursionDepth + 1) + ")"
+    }
+
+    if ((node.left.type != "BinaryExpression") && (node.right.type == "BinaryExpression")) {
+      letterCount += 1;
+      return "(" + String.fromCharCode(letterCount - 1) + node.operator + BinaryHandler(node.right, recursionDepth + 1) + ")"
+    }
+
+    if ((node.left.type == "BinaryExpression") && (node.right.type == "BinaryExpression")) {
+      letterCount += 1;
+      return "(" + BinaryHandler(node.left, recursionDepth + 1) + node.operator + BinaryHandler(node.right, recursionDepth + 1) + ")"
+    }
   }
-  console.log(outString);
+
+  return "error: case not caught"
+
+  // if ((node.left.type == "BinaryExpression") || (node.right.type == "BinaryExpression")) {
+  //   outString = outString + node.operator + "(";
+  // } else {
+  //   outString = outString + node.operator;
+  // }
+  // console.log(outString);
 }
 
 
@@ -29,14 +47,22 @@ const funcs: walk.RecursiveVisitors<string> = {BinaryExpression: (node, st, c) =
   const binaryExpressionNode = node as any
   // console.log(depth)
   const { depth } = JSON.parse(st)
-  console.log(st)
-  BinaryHandler(binaryExpressionNode);
+
+  letterCount = 65
+  console.log(depth)
+  console.log(BinaryHandler(binaryExpressionNode, 0));
   const updatedDepth = depth + 1;
-  const updatedState = JSON.stringify({depth: updatedDepth});
+  const updatedState = JSON.stringify({ depth: updatedDepth });
   c(binaryExpressionNode.left, updatedState)
   c(binaryExpressionNode.right, updatedState)
-}};
+}
+};
 
+// const funcs: walk.RecursiveVisitors<string> = {Program: (node, st, c) => {
+//   const updatedState = JSON.stringify({depth: 0})
+//   for (let stmt of node.body)
+//     c(stmt, updatedState, "Statement")
+// }};
 
 // funcs.BinaryExpression = (node, st, c, depth) => {
 //   console.log(depth)
@@ -44,9 +70,11 @@ const funcs: walk.RecursiveVisitors<string> = {BinaryExpression: (node, st, c) =
 //   c(node.left, st, "Expression", depth - 1)
 //   c(node.right, st, "Expression", depth - 1)
 // };
-// funcs.Program = (node, st, c, depth) => {
+
+// funcs.Program = (node, st, c) => {
+//   const updatedState = JSON.stringify({depth: 0})
 //   for (let stmt of node.body)
-//     c(stmt, st, "Statement", recursionDepth)
+//     c(stmt, updatedState, "Statement")
 // };
 // funcs.Expression = (node, st, c, depth) => {
 //   c(node, st, undefined, depth)
@@ -60,7 +88,7 @@ const funcs: walk.RecursiveVisitors<string> = {BinaryExpression: (node, st, c) =
 //   if (node.init) c(node.init, st, "Expression", depth)
 // };
 
-walk.recursive(acorn.parse(data, {ecmaVersion: 2020}), JSON.stringify({}), walk.make(funcs))
+walk.recursive(acorn.parse(data, {ecmaVersion: 2020}), JSON.stringify({depth: 0}), walk.make(funcs))
 
 // console.log(funcs);
 // console.log(walk.make(funcs));
