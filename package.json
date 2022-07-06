@@ -4,7 +4,10 @@
   "description": "Gathers Information on the code patterns in given JavaScript code.",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "prebuild": "rm -rf dist",
+    "build": "tsc",
+    "dev": "ts-node src/myTest"
   },
   "repository": {
     "type": "git",
@@ -25,5 +28,20 @@
   "dependencies": {
     "acorn": "^8.7.1",
     "acorn-walk": "^8.2.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "husky": "^7.0.4",
+    "jest": "^26.5.2",
+    "prettier": "^2.5.1",
+    "pretty-quick": "^3.1.2",
+    "ts-jest": "^26.4.1",
+    "ts-node": "^9.0.0",
+    "typescript": "^3.9.7",
+    "@types/prettier": "2.6.0"
   }
 }
