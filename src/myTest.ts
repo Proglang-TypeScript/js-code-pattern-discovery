@@ -4,14 +4,14 @@ import * as walk from "acorn-walk"
 
 let outString = "";
 let letterCount = 65;
-const maxDepth = 3;
+const maxDepth = 2;
 const maxRecursionDepth = 3;
 
 const data = fs.readFileSync('myTestFile.ts', 'utf8');
 
 
 const BinaryHandler = (node: any, recursionDepth: number): string => {
-  if ((recursionDepth > maxRecursionDepth) || ((node.left.type != "BinaryExpression") && node.right.type != "BinaryExpression") ) {
+  if ((recursionDepth >= maxRecursionDepth) || ((node.left.type != "BinaryExpression") && node.right.type != "BinaryExpression") ) {
     letterCount += 2;
     return "(" + String.fromCharCode(letterCount-2) + node.operator + String.fromCharCode(letterCount-1) + ")";
 
@@ -47,14 +47,15 @@ const funcs: walk.RecursiveVisitors<string> = {BinaryExpression: (node, st, c) =
   const binaryExpressionNode = node as any
   // console.log(depth)
   const { depth } = JSON.parse(st)
-
-  letterCount = 65
-  console.log(depth)
-  console.log(BinaryHandler(binaryExpressionNode, 0));
-  const updatedDepth = depth + 1;
-  const updatedState = JSON.stringify({ depth: updatedDepth });
-  c(binaryExpressionNode.left, updatedState)
-  c(binaryExpressionNode.right, updatedState)
+  if (depth <= maxDepth) {
+    letterCount = 65
+    console.log(depth)
+    console.log(BinaryHandler(binaryExpressionNode, 0));
+    const updatedDepth = depth + 1;
+    const updatedState = JSON.stringify({ depth: updatedDepth });
+    c(binaryExpressionNode.left, updatedState)
+    c(binaryExpressionNode.right, updatedState)
+  }
 }
 };
 
