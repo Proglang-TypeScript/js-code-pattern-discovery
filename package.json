@@ -7,7 +7,7 @@
     "test": "test",
     "prebuild": "rm -rf dist",
     "build": "tsc",
-    "dev": "ts-node src/myTest"
+    "pattern-search": "ts-node src/index"
   },
   "repository": {
     "type": "git",
@@ -27,9 +27,11 @@
   "homepage": "https://github.com/louis-gabel/js-code-pattern-discovery#readme",
   "dependencies": {
     "acorn": "^8.7.1",
-    "acorn-walk": "^8.2.0"
+    "acorn-walk": "^8.2.0",
+    "yargs": "^17.5.1"
   },
   "devDependencies": {
+    "@types/prettier": "2.6.0",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "eslint": "^7.32.0",
@@ -41,7 +43,6 @@
     "pretty-quick": "^3.1.2",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
-    "typescript": "^3.9.7",
-    "@types/prettier": "2.6.0"
+    "typescript": "^3.9.7"
   }
 }
