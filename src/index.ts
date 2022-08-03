@@ -8,8 +8,6 @@ let setLetterCount = 65;
 let letterCount = setLetterCount;
 const maxNodesVisited = 0;
 const supported: Array<string> = ["BinaryExpression", "LogicalExpression", "ConditionalExpression"]
-const left = ""
-const right = ""
 
 const argv = yargs(process.argv.slice(2)).options({
   depth: { type: 'number', default: 2 },
