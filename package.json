@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Gathers Information on the code patterns in given JavaScript code.",
   "main": "index.js",
+  "bin":{
+    "dts-pattern-search": "dist/index.js"
+  },
   "scripts": {
     "test": "test",
     "prebuild": "rm -rf dist",
