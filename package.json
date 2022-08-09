@@ -4,13 +4,13 @@
   "description": "Gathers Information on the code patterns in given JavaScript code.",
   "main": "index.js",
   "bin":{
-    "dts-pattern-search": "dist/index.js"
+    "dts-pattern-search": "dist/cli.js"
   },
   "scripts": {
     "test": "test",
     "prebuild": "rm -rf dist",
     "build": "tsc",
-    "pattern-search": "ts-node src/index"
+    "pattern-search": "ts-node src/cli"
   },
   "repository": {
     "type": "git",
