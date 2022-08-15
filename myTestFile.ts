@@ -1,89 +1,28 @@
-1 ? (false || 3 + 3 * 3) : 4 + "0"
+import unzipWith from './unzipWith.js'
 
-// /** Used to stand-in for `undefined` hash values. */
-// const HASH_UNDEFINED = '__lodash_hash_undefined__'
+/**
+ * This method is like `zip` except that it accepts `iteratee` to specify
+ * how grouped values should be combined. The iteratee is invoked with the
+ * elements of each group: (...group).
+ *
+ * @since 3.8.0
+ * @category Array
+ * @param {...Array} [arrays] The arrays to process.
+ * @param {Function} iteratee The function to combine
+ *  grouped values.
+ * @returns {Array} Returns the new array of grouped elements.
+ * @see unzip, unzipWith, zip, zipObject, zipObjectDeep, zipWith
+ * @example
+ *
+ * zipWith([1, 2], [10, 20], [100, 200], (a, b, c) => a + b + c)
+ * // => [111, 222]
+ */
+function zipWith(...arrays) {
+  const length = arrays.length
+  let iteratee = length > 1 ? arrays[length - 1] : undefined
+  iteratee = typeof iteratee === 'function' ? (arrays.pop(), iteratee) : undefined
+  return unzipWith(arrays, iteratee)
+}
 
-// class Hash {
-
-//   /**
-//    * Creates a hash object.
-//    *
-//    * @private
-//    * @constructor
-//    * @param {Array} [entries] The key-value pairs to cache.
-//    */
-//   constructor(entries) {
-//     let index = -1
-//     const length = entries == null ? 0 : entries.length
-
-//     this.clear()
-//     while (++index < length) {
-//       const entry = entries[index]
-//       this.set(entry[0], entry[1])
-//     }
-//   }
-
-//   /**
-//    * Removes all key-value entries from the hash.
-//    *
-//    * @memberOf Hash
-//    */
-//   clear() {
-//     this.__data__ = Object.create(null)
-//     this.size = 0
-//   }
-
-//   /**
-//    * Removes `key` and its value from the hash.
-//    *
-//    * @memberOf Hash
-//    * @param {string} key The key of the value to remove.
-//    * @returns {boolean} Returns `true` if the entry was removed, else `false`.
-//    */
-//   delete(key) {
-//     const result = this.has(key) && delete this.__data__[key]
-//     this.size -= result ? 1 : 0
-//     return result
-//   }
-
-//   /**
-//    * Gets the hash value for `key`.
-//    *
-//    * @memberOf Hash
-//    * @param {string} key The key of the value to get.
-//    * @returns {*} Returns the entry value.
-//    */
-//   get(key) {
-//     const data = this.__data__
-//     const result = data[key]
-//     return result === HASH_UNDEFINED ? undefined : result
-//   }
-
-//   /**
-//    * Checks if a hash value for `key` exists.
-//    *
-//    * @memberOf Hash
-//    * @param {string} key The key of the entry to check.
-//    * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-//    */
-//   has(key) {
-//     const data = this.__data__
-//     return data[key] !== undefined
-//   }
-
-//   /**
-//    * Sets the hash `key` to `value`.
-//    *
-//    * @memberOf Hash
-//    * @param {string} key The key of the value to set.
-//    * @param {*} value The value to set.
-//    * @returns {Object} Returns the hash instance.
-//    */
-//   set(key, value) {
-//     const data = this.__data__
-//     this.size += this.has(key) ? 0 : 1
-//     data[key] = value === undefined ? HASH_UNDEFINED : value
-//     return this
-//   }
-// }
+export default zipWith
 
