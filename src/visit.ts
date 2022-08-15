@@ -30,10 +30,16 @@ const ConditionalHandler = (node: any, recursionDepth: number): string => {
 
 const ConstantTest = (node: any): string => {
   if (constants.includes(node.value)) {
-    return "'" + node.value + ": " + typeof(node.value) + "'";
+    return "'" + node.raw + "'";
   }
-  letterCount += 1;
-  return String.fromCharCode(letterCount - 1);
+  else if (node.type == "Literal") {
+    letterCount += 1;
+    return "'" + String.fromCharCode(letterCount - 1) + ": " + typeof(node.value) + "'";
+  }
+  else {
+    letterCount += 1;
+    return "'" + String.fromCharCode(letterCount - 1) + ": " + node.type + "'";
+  }
 } 
   
 const codePattern = (node: any, recursionDepth: number): string => {
@@ -90,7 +96,7 @@ export const walkRec = (opts: { maxRecursionDepth?: number, inputFile?: string, 
   const inputFile = opts.inputFile || "";
   // const inputFile = new URL("file://github.com/lodash/lodash/blob/master/.internal/Hash.js")
   const data = fs.readFileSync(inputFile, 'utf8');
-  constants = opts.constants || [0, 1, "0", "1", false, true, ""];
+  constants = opts.constants || [0, 1, false, true, ""];
   walk.recursive(acorn.parse(data, { ecmaVersion: 2020 }), "", walk.make(generateVisitor));
   return(foundPatterns)
 }

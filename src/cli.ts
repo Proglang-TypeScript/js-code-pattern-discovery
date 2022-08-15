@@ -9,7 +9,9 @@ const argv = yargs(process.argv.slice(2)).options({
   constants: { type: 'array'},
 }).argv;
 
-console.log(walkRec({ maxRecursionDepth: argv.depth, inputFile: argv.inputFile, constants: argv.constants }));
+const result = (walkRec({ maxRecursionDepth: argv.depth, inputFile: argv.inputFile, constants: argv.constants }));
+console.log((result));
+// console.log(JSON.stringify(result));
 
 
 
