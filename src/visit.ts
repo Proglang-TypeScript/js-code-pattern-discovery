@@ -97,6 +97,6 @@ export const walkRec = (opts: { maxRecursionDepth?: number, inputFile?: string, 
   // const inputFile = new URL("file://github.com/lodash/lodash/blob/master/.internal/Hash.js")
   const data = fs.readFileSync(inputFile, 'utf8');
   constants = opts.constants || [0, 1, false, true, ""];
-  walk.recursive(acorn.parse(data, { ecmaVersion: 2020 }), "", walk.make(generateVisitor));
+  walk.recursive(acorn.parse(data, { ecmaVersion: 2020, sourceType: "module" }), "", walk.make(generateVisitor));
   return(foundPatterns)
 }
