@@ -7,7 +7,7 @@ let letterCount = setLetterCount;
 const supported: Array<string> = ["BinaryExpression", "LogicalExpression", "ConditionalExpression"];
 let constants = [""];
 let maxRecursionDepth = 2;
-const foundPatterns: Array<string> = [];
+const foundPatterns: {[pattern: string]: number} = {};
 
 const BinaryHandler = (node: any, recursionDepth: number): string => {
   if (recursionDepth >= maxRecursionDepth) {
@@ -62,9 +62,7 @@ const generateVisitor: walk.RecursiveVisitors<string> = {
     const binaryExpressionNode = node as any;
     letterCount = setLetterCount;
     const pattern = codePattern(binaryExpressionNode, 0);
-    if (!(foundPatterns.includes(pattern))) {
-      foundPatterns.push(pattern);
-    }
+    (foundPatterns[pattern]) ? foundPatterns[pattern] += 1 : foundPatterns[pattern] = 1;
     c(binaryExpressionNode.left, st)
     c(binaryExpressionNode.right, st)
   },
@@ -72,9 +70,7 @@ const generateVisitor: walk.RecursiveVisitors<string> = {
     const logicalExpressionNode = node as any;
     letterCount = setLetterCount;
     const pattern = codePattern(logicalExpressionNode, 0);
-    if (!(foundPatterns.includes(pattern))) {
-      foundPatterns.push(pattern);
-    }
+    (foundPatterns[pattern]) ? foundPatterns[pattern] += 1 : foundPatterns[pattern] = 1;
     c(logicalExpressionNode.left, st)
     c(logicalExpressionNode.right, st)
   },
@@ -82,9 +78,7 @@ const generateVisitor: walk.RecursiveVisitors<string> = {
     const conditionalExpressionNode = node as any;
     letterCount = setLetterCount;
     const pattern = codePattern(conditionalExpressionNode, 0);
-    if (!(foundPatterns.includes(pattern))) {
-      foundPatterns.push(pattern);
-    }
+    (foundPatterns[pattern]) ? foundPatterns[pattern] += 1 : foundPatterns[pattern] = 1;
     c(conditionalExpressionNode.test, st)
     c(conditionalExpressionNode.consequent, st)
     c(conditionalExpressionNode.alternate, st)
@@ -94,7 +88,6 @@ const generateVisitor: walk.RecursiveVisitors<string> = {
 export const walkRec = (opts: { maxRecursionDepth?: number, inputFile?: string, constants?: Array<any> } = {}) => {
   maxRecursionDepth = opts.maxRecursionDepth || 2;
   const inputFile = opts.inputFile || "";
-  // const inputFile = new URL("file://github.com/lodash/lodash/blob/master/.internal/Hash.js")
   const data = fs.readFileSync(inputFile, 'utf8');
   constants = opts.constants || [0, 1, false, true, ""];
   walk.recursive(acorn.parse(data, { ecmaVersion: 2020, sourceType: "module" }), "", walk.make(generateVisitor));

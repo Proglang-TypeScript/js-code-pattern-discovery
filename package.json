@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/louis-gabel/js-code-pattern-discovery#readme",
   "dependencies": {
+    "@types/glob": "^7.2.0",
     "acorn": "^8.7.1",
     "acorn-loose": "^8.3.0",
     "acorn-walk": "^8.2.0",
