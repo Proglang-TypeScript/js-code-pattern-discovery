@@ -11,25 +11,24 @@ const argv = yargs(process.argv.slice(2)).options({
   constants: { type: 'array'},
 }).argv;
 
-const directory = argv.inputDir + "/*.js";
-glob(directory, (err: Error | null, files: string[]): void => {
-  let result: {[pattern: string]: number} = {};
+
+glob(argv.inputDir, (err: Error | null, files: string[]): void => {
+  let result: { [pattern: string]: number } = {};
   if (err) {
     console.log(err);
   }
   files.forEach((file: string) => {
     result = (walkRec({ maxRecursionDepth: argv.depth, inputFile: file, constants: argv.constants }));
   })
-  fs.writeFileSync("output.txt" ,JSON.stringify(result, null, 4));
-  console.log("finished");
+  const resultArray = Object.entries(result);
+  const sortedResultArray = resultArray.sort(([, a], [, b]) => b - a);
+  const sortedResult = Object.fromEntries(sortedResultArray);
+  let patternCount = 0;
+  let uniquePatternCount = 0;
+  for (let x in sortedResultArray) {
+    patternCount += sortedResultArray[x][1];
+    uniquePatternCount += 1;
+  }
+  const outstring = "Found " + patternCount + " patterns and " + uniquePatternCount + " unique patterns:\n";
+  fs.writeFileSync("output.txt", outstring + JSON.stringify(sortedResult, null, 4));
 })
-
-
-
-
-// console.log(JSON.stringify(result));
-
-
-
-
-

@@ -89,7 +89,7 @@ export const walkRec = (opts: { maxRecursionDepth?: number, inputFile?: string, 
   maxRecursionDepth = opts.maxRecursionDepth || 2;
   const inputFile = opts.inputFile || "";
   const data = fs.readFileSync(inputFile, 'utf8');
-  constants = opts.constants || [0, 1, false, true, ""];
+  constants = opts.constants || [0, -1, 1, false, true, ""];
   walk.recursive(acorn.parse(data, { ecmaVersion: 2020, sourceType: "module" }), "", walk.make(generateVisitor));
   return(foundPatterns)
 }
