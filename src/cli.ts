@@ -14,11 +14,12 @@ const argv = yargs(process.argv.slice(2)).options({
 
 glob(argv.inputDir, (err: Error | null, files: string[]): void => {
   let result: { [pattern: string]: number } = {};
+  let errorCount = 0;
   if (err) {
     console.log(err);
   }
   files.forEach((file: string) => {
-    result = (walkRec({ maxRecursionDepth: argv.depth, inputFile: file, constants: argv.constants }));
+    [result, errorCount] = (walkRec({ maxRecursionDepth: argv.depth, inputFile: file, constants: argv.constants }));
   })
   const resultArray = Object.entries(result);
   const sortedResultArray = resultArray.sort(([, a], [, b]) => b - a);
@@ -29,6 +30,6 @@ glob(argv.inputDir, (err: Error | null, files: string[]): void => {
     patternCount += sortedResultArray[x][1];
     uniquePatternCount += 1;
   }
-  const outstring = "Found " + patternCount + " patterns and " + uniquePatternCount + " unique patterns:\n";
+  const outstring = "Found " + patternCount + " patterns and " + uniquePatternCount + " unique patterns, " + errorCount + " files could not be parsed:\n";
   fs.writeFileSync("output.txt", outstring + JSON.stringify(sortedResult, null, 4));
 })

@@ -8,6 +8,7 @@ const supported: Array<string> = ["BinaryExpression", "LogicalExpression", "Cond
 let constants = [""];
 let maxRecursionDepth = 2;
 const foundPatterns: {[pattern: string]: number} = {};
+let errorCount = 0;
 
 const BinaryHandler = (node: any, recursionDepth: number): string => {
   if (recursionDepth >= maxRecursionDepth) {
@@ -85,11 +86,25 @@ const generateVisitor: walk.RecursiveVisitors<string> = {
   },
 }
 
-export const walkRec = (opts: { maxRecursionDepth?: number, inputFile?: string, constants?: Array<any> } = {}) => {
+export const walkRec = (opts: { maxRecursionDepth?: number, inputFile?: string, constants?: Array<any> } = {}): [{ [pattern: string]: number }, number] => {
   maxRecursionDepth = opts.maxRecursionDepth || 2;
   const inputFile = opts.inputFile || "";
   const data = fs.readFileSync(inputFile, 'utf8');
   constants = opts.constants || [0, -1, 1, false, true, ""];
-  walk.recursive(acorn.parse(data, { ecmaVersion: 2020, sourceType: "module" }), "", walk.make(generateVisitor));
-  return(foundPatterns)
+  try {
+    walk.recursive(acorn.parse(data, { ecmaVersion: 2020, sourceType: "module" }), "", walk.make(generateVisitor));
+  } catch (error) {
+    errorCount += 1;
+    console.error("error ", error);
+  }
+  return([foundPatterns, errorCount])
 }
+
+// export const walkRec = (opts: { maxRecursionDepth?: number, inputFile?: string, constants?: Array<any> } = {}) => {
+//   maxRecursionDepth = opts.maxRecursionDepth || 2;
+//   const inputFile = opts.inputFile || "";
+//   const data = fs.readFileSync(inputFile, 'utf8');
+//   constants = opts.constants || [0, -1, 1, false, true, ""];
+//   walk.recursive(acorn.parse(data, { ecmaVersion: 2020, sourceType: "module" }), "", walk.make(generateVisitor));
+//   return(foundPatterns)
+// }
