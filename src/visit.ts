@@ -92,19 +92,10 @@ export const walkRec = (opts: { maxRecursionDepth?: number, inputFile?: string, 
   const data = fs.readFileSync(inputFile, 'utf8');
   constants = opts.constants || [0, -1, 1, false, true, ""];
   try {
-    walk.recursive(acorn.parse(data, { ecmaVersion: 2020, sourceType: "module" }), "", walk.make(generateVisitor));
+    walk.recursive(acorn.parse(data, { ecmaVersion: 2020, sourceType: "module", allowHashBang: true }), "", walk.make(generateVisitor));
   } catch (error) {
     errorCount += 1;
-    console.error("error ", error);
+    console.error("error in", inputFile, error);
   }
   return([foundPatterns, errorCount])
 }
-
-// export const walkRec = (opts: { maxRecursionDepth?: number, inputFile?: string, constants?: Array<any> } = {}) => {
-//   maxRecursionDepth = opts.maxRecursionDepth || 2;
-//   const inputFile = opts.inputFile || "";
-//   const data = fs.readFileSync(inputFile, 'utf8');
-//   constants = opts.constants || [0, -1, 1, false, true, ""];
-//   walk.recursive(acorn.parse(data, { ecmaVersion: 2020, sourceType: "module" }), "", walk.make(generateVisitor));
-//   return(foundPatterns)
-// }
