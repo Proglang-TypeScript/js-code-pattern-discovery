@@ -22,6 +22,9 @@ const BinaryHandler = (node: any, recursionDepth: number): string => {
 }
 
 const ConditionalHandler = (node: any, recursionDepth: number): string => {
+  if (recursionDepth >= maxRecursionDepth) {
+    return "(" + ConstantTest(node.test) + " ? " + ConstantTest(node.consequent) + " : " + ConstantTest(node.alternate) + ")";
+  }
   const test = (supported.includes(node.test.type)) ? codePattern(node.test, recursionDepth + 1) : ConstantTest(node.test);
   const consequent = (supported.includes(node.consequent.type)) ? codePattern(node.consequent, recursionDepth + 1) : ConstantTest(node.consequent);
   const alternate = (supported.includes(node.alternate.type)) ? codePattern(node.alternate, recursionDepth + 1) : ConstantTest(node.alternate);
