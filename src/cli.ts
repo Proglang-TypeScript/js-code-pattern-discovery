@@ -9,7 +9,8 @@ const argv = yargs(process.argv.slice(2)).options({
   depth: { type: 'number' },
   inputDir: { type: 'string', demandOption: true },
   constants: { type: 'array'},
-  inputIsFile: {type: 'boolean', default: false}
+  inputIsFile: {type: 'boolean', default: false},
+  associative: {type: 'array'}
 }).argv;
 
 
@@ -20,10 +21,10 @@ glob(argv.inputDir, (err: Error | null, files: string[]): void => {
     console.log(err);
   }
   if (argv.inputIsFile == true) {
-    [result, errorCount] = (walkRec({ maxRecursionDepth: argv.depth, inputFile: argv.inputDir, constants: argv.constants }));
+    [result, errorCount] = (walkRec({ maxRecursionDepth: argv.depth, inputFile: argv.inputDir, constants: argv.constants, associative: argv.associative }));
   } else {
     files.forEach((file: string) => {
-    [result, errorCount] = (walkRec({ maxRecursionDepth: argv.depth, inputFile: file, constants: argv.constants }));
+    [result, errorCount] = (walkRec({ maxRecursionDepth: argv.depth, inputFile: file, constants: argv.constants, associative: argv.associative }));
   })
   }
   
@@ -37,5 +38,5 @@ glob(argv.inputDir, (err: Error | null, files: string[]): void => {
     uniquePatternCount += 1;
   }
   const outstring = "Found " + patternCount + " patterns and " + uniquePatternCount + " unique patterns, " + errorCount + " files could not be parsed:\n";
-  fs.writeFileSync("output.txt", outstring + JSON.stringify(sortedResult, null, 4));
+  fs.writeFileSync("output.csv", outstring + JSON.stringify(sortedResult, null, 4));
 })
