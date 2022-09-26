@@ -10,7 +10,7 @@ const argv = yargs(process.argv.slice(2)).options({
   inputDir: { type: 'string', demandOption: true },
   constants: { type: 'array'},
   inputIsFile: {type: 'boolean', default: false},
-  associative: {type: 'array'}
+  commutative: {type: 'array'}
 }).argv;
 
 
@@ -21,10 +21,10 @@ glob(argv.inputDir, (err: Error | null, files: string[]): void => {
     console.log(err);
   }
   if (argv.inputIsFile == true) {
-    [result, errorCount] = (walkRec({ maxRecursionDepth: argv.depth, inputFile: argv.inputDir, constants: argv.constants, associative: argv.associative }));
+    [result, errorCount] = (walkRec({ maxRecursionDepth: argv.depth, inputFile: argv.inputDir, constants: argv.constants, commutative: argv.commutative }));
   } else {
     files.forEach((file: string) => {
-    [result, errorCount] = (walkRec({ maxRecursionDepth: argv.depth, inputFile: file, constants: argv.constants, associative: argv.associative }));
+    [result, errorCount] = (walkRec({ maxRecursionDepth: argv.depth, inputFile: file, constants: argv.constants, commutative: argv.commutative }));
   })
   }
   

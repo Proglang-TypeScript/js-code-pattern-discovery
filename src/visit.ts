@@ -7,7 +7,7 @@ let setLetterCount = 65;
 let letterCount = setLetterCount;
 const supported: Array<string> = ["BinaryExpression", "LogicalExpression", "ConditionalExpression", "UnaryExpression"];
 let constants = [""];
-let associative = [""]
+let commutative = ["==", "===", "*"]
 let maxRecursionDepth = 2;
 const foundPatterns: {[pattern: string]: number} = {};
 let errorCount = 0;
@@ -16,7 +16,7 @@ const BinaryHandler = (node: any, recursionDepth: number): string => {
   let switchable = false;
   let left = "";
   let right = "";
-  if (associative.includes(node.operator)) {
+  if (commutative.includes(node.operator)) {
     if (!(node.left.type.includes("Expression") && node.right.type.includes("Expression")) && (node.right.type > node.left.type)) {
       switchable = true
     }
@@ -130,12 +130,12 @@ const generateVisitor: walk.RecursiveVisitors<string> = {
   },
 }
 
-export const walkRec = (opts: { maxRecursionDepth?: number, inputFile?: string, constants?: Array<any>, associative?: Array<any> } = {}): [{ [pattern: string]: number }, number] => {
+export const walkRec = (opts: { maxRecursionDepth?: number, inputFile?: string, constants?: Array<any>, commutative?: Array<any> } = {}): [{ [pattern: string]: number }, number] => {
   maxRecursionDepth = opts.maxRecursionDepth || 2;
   const inputFile = opts.inputFile || "";
   const data = fs.readFileSync(inputFile, 'utf8');
   constants = opts.constants || [0, -1, 1, false, true, "", "string", "number", "boolean", "function", "undefined", "object", "null", null];
-  associative = opts.associative || ["==", "===", "*"]
+  commutative = opts.commutative || ["==", "===", "*"]
   try {
     walk.recursive(acorn.parse(data, { ecmaVersion: 2022, sourceType: "module", allowHashBang: true, allowReturnOutsideFunction: true }), "", walk.make(generateVisitor));
   } catch (error) {
